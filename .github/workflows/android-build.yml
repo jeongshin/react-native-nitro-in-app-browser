@@ -6,29 +6,33 @@ on:
       - main
     paths:
       - '.github/workflows/android-build.yml'
+      - 'scripts/verify-package.mjs'
       - 'example/android/**'
       - 'nitrogen/generated/shared/**'
       - 'nitrogen/generated/android/**'
       - 'cpp/**'
       - 'android/**'
-      - '**/bun.lock'
+      - '**/yarn.lock'
+      - '**/package.json'
       - '**/react-native.config.js'
       - '**/nitro.json'
   pull_request:
     paths:
       - '.github/workflows/android-build.yml'
+      - 'scripts/verify-package.mjs'
       - 'example/android/**'
       - '**/nitrogen/generated/shared/**'
       - '**/nitrogen/generated/android/**'
       - 'cpp/**'
       - 'android/**'
-      - '**/bun.lock'
+      - '**/yarn.lock'
+      - '**/package.json'
       - '**/react-native.config.js'
       - '**/nitro.json'
 
 concurrency:
-    group: ${{ github.workflow }}-${{ github.ref }}
-    cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build_new:
@@ -36,39 +40,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: oven-sh/setup-bun@v2
-
-      - name: Install npm dependencies (bun)
-        run: bun install
-
-      - name: Setup JDK 17
-        uses: actions/setup-java@v5
+      - uses: actions/setup-node@v4
         with:
-          distribution: 'zulu'
-          java-version: 17
-          java-package: jdk
-          cache: gradle
+          node-version: 24.21.0
+      - name: Enable Yarn
+        run: corepack enable
 
-      - name: Run Gradle Build for example/android/
-        working-directory: example/android
-        run: ./gradlew assembleDebug --no-daemon --build-cache
+      - name: Install dependencies
+        run: yarn install --immutable
 
-      - name: Stop Gradle Daemon
-        working-directory: example/android
-        run: ./gradlew --stop
-
-  build_old:
-    name: Build Android Example App (old architecture)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: oven-sh/setup-bun@v2
-
-      - name: Install npm dependencies (bun)
-        run: bun install
-
-      - name: Disable new architecture in gradle.properties
-        run: sed -i "s/newArchEnabled=true/newArchEnabled=false/g" example/android/gradle.properties
+      - name: Verify packed runtime sources and Android autolinking
+        run: |
+          yarn build
+          yarn pack --out "$RUNNER_TEMP/browser-package.tgz"
+          yarn verify:package "$RUNNER_TEMP/browser-package.tgz"
 
       - name: Setup JDK 17
         uses: actions/setup-java@v5
