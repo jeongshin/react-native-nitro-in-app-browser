@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - '.github/workflows/ios-build.yml'
+      - 'scripts/verify-package.mjs'
       - 'example/ios/**'
       - 'example/Gemfile'
       - 'example/Gemfile.lock'
@@ -22,6 +23,7 @@ on:
   pull_request:
     paths:
       - '.github/workflows/ios-build.yml'
+      - 'scripts/verify-package.mjs'
       - 'example/ios/**'
       - 'example/Gemfile'
       - 'example/Gemfile.lock'
@@ -63,6 +65,12 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --immutable
+
+      - name: Verify packed runtime sources and Android autolinking
+        run: |
+          yarn build
+          yarn pack --out "$RUNNER_TEMP/browser-package.tgz"
+          yarn verify:package "$RUNNER_TEMP/browser-package.tgz"
 
       - name: Setup Ruby (bundle)
         uses: ruby/setup-ruby@v1
