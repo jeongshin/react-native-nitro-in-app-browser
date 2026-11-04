@@ -1,4 +1,4 @@
-# react-native-nitro-in-app-browser
+# @jeongshin/react-native-nitro-in-app-browser
 
 A Simple React Native Nitro module for in-app browser.
 
@@ -15,7 +15,7 @@ A Simple React Native Nitro module for in-app browser.
 > See [react-native-nitro-modules](https://github.com/mrousavy/nitro) for more information.
 
 ```sh
-bun install react-native-nitro-in-app-browser react-native-nitro-modules@0.28.1
+yarn add @jeongshin/react-native-nitro-in-app-browser react-native-nitro-modules@0.37.2
 cd ios && pod install && cd ..
 ```
 
@@ -24,7 +24,7 @@ cd ios && pod install && cd ..
 ```js
 import React from 'react';
 import { Button, SafeAreaView } from 'react-native';
-import NitroInAppBrowser from 'react-native-nitro-in-app-browser';
+import NitroInAppBrowser from '@jeongshin/react-native-nitro-in-app-browser';
 
 const App = () => {
   return (

@@ -11,7 +11,8 @@ on:
       - 'nitrogen/generated/android/**'
       - 'cpp/**'
       - 'android/**'
-      - '**/bun.lock'
+      - '**/yarn.lock'
+      - '**/package.json'
       - '**/react-native.config.js'
       - '**/nitro.json'
   pull_request:
@@ -22,7 +23,8 @@ on:
       - '**/nitrogen/generated/android/**'
       - 'cpp/**'
       - 'android/**'
-      - '**/bun.lock'
+      - '**/yarn.lock'
+      - '**/package.json'
       - '**/react-native.config.js'
       - '**/nitro.json'
 
@@ -36,39 +38,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: oven-sh/setup-bun@v2
-
-      - name: Install npm dependencies (bun)
-        run: bun install
-
-      - name: Setup JDK 17
-        uses: actions/setup-java@v5
+      - uses: actions/setup-node@v4
         with:
-          distribution: 'zulu'
-          java-version: 17
-          java-package: jdk
-          cache: gradle
+          node-version: 24.21.0
+      - name: Enable Yarn
+        run: corepack enable
 
-      - name: Run Gradle Build for example/android/
-        working-directory: example/android
-        run: ./gradlew assembleDebug --no-daemon --build-cache
-
-      - name: Stop Gradle Daemon
-        working-directory: example/android
-        run: ./gradlew --stop
-
-  build_old:
-    name: Build Android Example App (old architecture)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: oven-sh/setup-bun@v2
-
-      - name: Install npm dependencies (bun)
-        run: bun install
-
-      - name: Disable new architecture in gradle.properties
-        run: sed -i "s/newArchEnabled=true/newArchEnabled=false/g" example/android/gradle.properties
+      - name: Install dependencies
+        run: yarn install --immutable
 
       - name: Setup JDK 17
         uses: actions/setup-java@v5

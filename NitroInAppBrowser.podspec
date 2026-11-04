@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.authors      = package["author"]
 
   s.platforms    = { :ios => min_ios_version_supported, :visionos => 1.0 }
-  s.source       = { :git => "https://github.com/patrickkabwe/react-native-nitro-in-app-browser.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/jeongshin/react-native-nitro-in-app-browser.git", :tag => "#{s.version}" }
 
   s.source_files = [
     # Implementation (Swift)
