@@ -1,6 +1,6 @@
 import React from 'react';
 import {Alert, Button, StyleSheet} from 'react-native';
-import NitroInAppBrowser from 'react-native-nitro-in-app-browser';
+import NitroInAppBrowser from '@jeongshin/react-native-nitro-in-app-browser';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 
 const AppWrapper = () => {

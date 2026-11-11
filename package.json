@@ -1,6 +1,6 @@
 {
-    "name": "react-native-nitro-in-app-browser",
-    "version": "2.0.0",
+    "name": "@jeongshin/react-native-nitro-in-app-browser",
+    "version": "2.0.3",
     "description": "Nitro module package",
     "main": "./lib/commonjs/index.js",
     "module": "./lib/module/index.js",
@@ -9,10 +9,11 @@
     "source": "src/index",
     "scripts": {
         "typecheck": "tsc --noEmit",
+        "verify:package": "node scripts/verify-package.mjs",
         "clean": "git clean -dfX",
         "release": "semantic-release",
-        "build": "bun run typecheck && bob build",
-        "codegen": "nitrogen --logLevel=\"debug\" && bun run build && node post-script.js",
+        "build": "tsc --noEmit && bob build",
+        "codegen": "nitrogen --logLevel=\"debug\" && yarn build && node post-script.js",
         "postcodegen": "bun --cwd example pod"
     },
     "keywords": [
@@ -31,7 +32,7 @@
         "android/build.gradle",
         "android/gradle.properties",
         "android/CMakeLists.txt",
-        "android/src",
+        "android/src/**/*",
         "ios/**/*.h",
         "ios/**/*.m",
         "ios/**/*.mm",
@@ -44,34 +45,34 @@
     "workspaces": [
         "example"
     ],
-    "repository": "https://github.com/patrickkabwe/react-native-nitro-in-app-browser.git",
+    "repository": "https://github.com/jeongshin/react-native-nitro-in-app-browser.git",
     "author": "Patrick Kabwe",
     "license": "MIT",
-    "bugs": "https://github.com/patrickkabwe/react-native-nitro-in-app-browser/issues",
-    "homepage": "https://github.com/patrickkabwe/react-native-nitro-in-app-browser#readme",
+    "bugs": "https://github.com/jeongshin/react-native-nitro-in-app-browser/issues",
+    "homepage": "https://github.com/jeongshin/react-native-nitro-in-app-browser#readme",
     "publishConfig": {
         "registry": "https://registry.npmjs.org/",
-        "provenance": true
+        "access": "public"
     },
     "devDependencies": {
         "@jamesacarr/eslint-formatter-github-actions": "^0.2.0",
         "@semantic-release/changelog": "^6.0.3",
         "@semantic-release/git": "^10.0.1",
         "@types/jest": "^29.5.12",
-        "@types/react": "^19.0.10",
+        "@types/react": "19.3.0",
         "conventional-changelog-conventionalcommits": "^9.1.0",
-        "nitrogen": "^0.35.0",
-        "react": "19.1.0",
-        "react-native": "0.81.0",
+        "nitrogen": "0.37.2",
+        "react": "19.3.0",
+        "react-native": "0.88.1",
         "react-native-builder-bob": "^0.37.0",
-        "react-native-nitro-modules": "^0.35.0",
+        "react-native-nitro-modules": "0.37.2",
         "semantic-release": "^24.2.3",
-        "typescript": "5.0.4"
+        "typescript": "5.9.2"
     },
     "peerDependencies": {
         "react": "*",
         "react-native": "*",
-        "react-native-nitro-modules": "*"
+        "react-native-nitro-modules": ">=0.37.2 <0.38.0"
     },
     "eslintConfig": {
         "root": true,
@@ -120,5 +121,6 @@
                 }
             ]
         ]
-    }
+    },
+    "packageManager": "yarn@4.9.2"
 }
