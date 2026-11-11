@@ -4,9 +4,23 @@
 
 - 업스트림: https://github.com/patrickkabwe/react-native-nitro-in-app-browser
 - 소유 저장소: https://github.com/jeongshin/react-native-nitro-in-app-browser
-- 앱이 쓰는 배포본: scoped `2.0.1`, npm gitHead `1e76d03ad598ca87eaddedef2162f1053a92f679`예요.
-- 기준 브랜치: `chore/upgrade-nitro-v35`예요. 해당 커밋의 src·ios·android·nitrogen은 배포 tarball과 같아요. 배포본에서만 달랐던 package name/version/publishConfig를 소유 manifest에 반영해요.
-- 이번 후보: `2.0.2`, Nitro/Nitrogen `0.37.2`, Nitro peer `>=0.37.2 <0.38.0`예요. 공개 open/close API와 네이티브 옵션 동작은 유지해요.
+- 기준 커밋: `1e76d03`(브랜치 `chore/upgrade-nitro-v35`)이에요. 업스트림 `v2.0.1`과 scoped `2.0.1` 배포본의 src·ios·android·nitrogen이 이 커밋과 같아요.
+- 배포 버전: `2.0.3`이에요. Nitro/Nitrogen `0.37.2`, Nitro peer `>=0.37.2 <0.38.0`, RN 0.88.1·React 19.3 예제 기준이에요. 공개 open/close API와 네이티브 옵션 동작은 `2.0.1`과 같아요.
+- npm의 scoped `2.0.2`에는 `android/src` 원본 5개가 없어요. Android 앱은 `2.0.3` 이상을 써요.
+
+## 업스트림 대비 우리 변경
+
+- 배포 이름과 주소: `package.json`의 `name`·`repository`·`bugs`·`homepage`·`publishConfig`, podspec `s.source`, README 설치 안내예요.
+- Nitro 0.37.2: `nitrogen`·`react-native-nitro-modules` devDependency와 peer 범위, `nitrogen/generated` 재생성본이에요. 직접 쓴 src·ios·android 원본은 기준 커밋과 같아요.
+- 포장: `files`의 `android/src/**/*`, `scripts/verify-package.mjs`, 두 플랫폼 CI의 포장 검증 단계예요.
+- 개발 환경: Yarn 4.9.2(`packageManager`·`yarn.lock`·`.yarnrc.yml`), RN 0.88.1·React 19.3 예제, CI의 Node·Xcode 버전이에요.
+
+## 반영하지 않은 업스트림 변경
+
+- `v2.0.2`: `androidx.browser` 1.9.0, 라이브러리 `build.gradle`의 AGP classpath 9.0.1, spec의 `import type`, `engines.node`예요.
+- `main`의 `829360c`(npm 미배포): Android에서 `pageSheet`·`formSheet`를 partial custom tab으로 여는 동작이에요.
+
+둘 다 Android 의존성이나 화면 동작을 바꿔요. 앱 QA와 함께 별도 버전에서 반영해요.
 
 ## 변경을 반영할 때
 
@@ -16,4 +30,6 @@ Android 라이브러리는 rootProject의 NDK 값을 우선 사용하고 fallbac
 
 ## 발행 게이트
 
-현재 release workflow는 수동 실행·NPM_TOKEN 방식이고 semantic-release는 main/next만 허용해요. 이 호환 브랜치는 자동 발행 대상이 아니에요. scoped package의 토큰 권한 또는 trusted publishing 설정을 확인한 뒤 소유자의 발행 지시로만 배포해요. 공개 패키지를 만드는 workflow 실행과 npm publish, 릴리스 태그 push는 이 호환성 작업에 포함하지 않아요.
+발행은 소유자가 로컬에서 직접 해요. `yarn build` → `yarn pack --out <tgz>` → `yarn verify:package <tgz>`를 통과한 tarball 파일 그대로 `npm publish <tgz> --tag latest --access public`으로 올리고, 발행 뒤 registry tarball이 그 파일과 같은지 대조해요. npm `latest`는 앱이 쓰는 버전을 가리켜요.
+
+release workflow는 수동 실행·NPM_TOKEN 방식이고 semantic-release는 main/next만 허용해요. 이 호환 브랜치는 자동 발행 대상에 들어가지 않아요.
